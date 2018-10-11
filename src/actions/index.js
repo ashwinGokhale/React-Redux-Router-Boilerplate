@@ -1,9 +1,7 @@
-import axios from 'axios';
-import { getStorage } from '../constants';
+import { getStorage, axios } from '../constants';
 
 // Helper functions
 export const getToken = () => getStorage().getItem('token');
-export const getCurrentUser = () => JSON.parse(getStorage().getItem('user'));
 const makeDispatcher = (type, ...argNames) => (...args) => {
 	const action = { type };
 	argNames.forEach((arg, index) => {
@@ -136,7 +134,6 @@ export const fetchUser = async (id, params) => {
 
 export const fetchProfile = params => async dispatch => {
 	try {
-		const user = getCurrentUser();
 		const token = getToken();
 		if (!token) {
 			dispatch(setUser(null));
@@ -157,10 +154,15 @@ export const fetchProfile = params => async dispatch => {
 	}
 };
 
-export const updateProfile = (id, member) => async dispatch => {
+export const updateProfile = (id, member) => async (dispatch, getState) => {
 	try {
-		const user = getCurrentUser();
-		if (!user || (Object.keys(user).length === 0 && user.constructor === Object)) {
+		const {
+			sessionState: { user }
+		} = getState();
+		if (
+			!user ||
+			(Object.keys(user).length === 0 && user.constructor === Object)
+		) {
 			dispatch(setUser(null));
 			dispatch(setToken(null));
 			return null;
@@ -197,6 +199,7 @@ export const getUser = async params => {
 
 export const storageChanged = e => dispatch => {
 	console.log('Local storage changed event:', e);
-	dispatch(setToken(getToken()));
-	dispatch(setUser(getCurrentUser()));
+	const token = getToken();
+	if (!token) signOut()(dispatch);
+	else dispatch(setToken(token));
 };

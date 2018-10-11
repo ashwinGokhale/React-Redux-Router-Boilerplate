@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 
 const Header = ({ message }) => (
 	<Helmet>
-		<title>{message ? `${message} | Nami` : 'Nami'}</title>
+		<title>{message ? `${message} | MyApp` : 'MyApp'}</title>
 	</Helmet>
 );
 

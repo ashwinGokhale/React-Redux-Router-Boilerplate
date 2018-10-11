@@ -18,9 +18,7 @@ const Navbar = ({ auth }) => (
 						<React.Fragment>
 							<Link to={routes.PROFILE}>Profile</Link>
 							<CommonNav />
-							<Link to={routes.POST}>New Post</Link>
 							<Link to={routes.LOGOUT}>Logout</Link>
-							<Link to={routes.STATS}>Stats</Link>
 						</React.Fragment>
 					) : (
 						<React.Fragment>

@@ -1,3 +1,19 @@
+import ax from 'axios';
+
+const { REACT_APP_NODE_ENV, REACT_APP_API_URL } = process.env;
+
+export const CONFIG = {
+	NODE_ENV: REACT_APP_NODE_ENV || 'development',
+	SERVER_URL:
+		(REACT_APP_NODE_ENV === 'production' && REACT_APP_API_URL)
+			? REACT_APP_API_URL
+			: 'http://localhost:5000'
+};
+
+export const axios = ax.create({
+	baseURL: CONFIG.SERVER_URL
+});
+
 const dateToString = date =>
 	new Date(date).toLocaleDateString('en-US', {
 		year: 'numeric',
@@ -33,7 +49,8 @@ export const memberMatches = (user, id) =>
 
 export const shortName = name => name.substr(0, 32);
 
-const storage = () => (localStorage.getItem('token') ? localStorage : sessionStorage);
+const storage = () =>
+	localStorage.getItem('token') ? localStorage : sessionStorage;
 let _storage = storage();
 export const getStorage = () => _storage;
 export const setStorage = store => {
@@ -48,7 +65,5 @@ export default {
 	RESET_PASSWORD: '/reset',
 	FORGOT_PASSWORD: '/forgot',
 	PROFILE: '/profile',
-	USER: '/user/:id',
-	STATS: '/stats',
-	POST: '/post'
+	USER: '/user/:id'
 };
